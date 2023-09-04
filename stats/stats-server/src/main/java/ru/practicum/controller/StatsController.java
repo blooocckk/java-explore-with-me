@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.Constants;
 import ru.practicum.EndpointHitDto;
@@ -20,7 +19,6 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@Validated
 public class StatsController {
     private final StatsService statsService;
 
