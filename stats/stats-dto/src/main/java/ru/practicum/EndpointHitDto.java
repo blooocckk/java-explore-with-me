@@ -13,15 +13,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class EndpointHitDto {
     @NotBlank
-    String app;
+    private String app;
 
     @NotBlank
-    String uri;
+    private String uri;
 
     @NotBlank
-    String ip;
+    private String ip;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_PATTERN)
-    LocalDateTime timestamp;
+    private LocalDateTime timestamp;
 }

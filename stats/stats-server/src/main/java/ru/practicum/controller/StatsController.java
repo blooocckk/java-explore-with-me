@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.Constants;
 import ru.practicum.EndpointHitDto;
+import ru.practicum.OutputHitDto;
 import ru.practicum.ViewStats;
 import ru.practicum.service.StatsService;
 
@@ -23,7 +24,7 @@ public class StatsController {
     private final StatsService statsService;
 
     @PostMapping("/hit")
-    public ResponseEntity<EndpointHitDto> hitEndpoint(@Valid @RequestBody EndpointHitDto endpointHitDto) {
+    public ResponseEntity<OutputHitDto> hitEndpoint(@Valid @RequestBody EndpointHitDto endpointHitDto) {
         log.info("Received a request to save statistics");
         return ResponseEntity.status(HttpStatus.CREATED).body(statsService.saveHit(endpointHitDto));
     }

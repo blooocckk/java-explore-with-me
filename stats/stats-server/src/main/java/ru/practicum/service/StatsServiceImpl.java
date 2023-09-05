@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import ru.practicum.EndpointHitDto;
+import ru.practicum.OutputHitDto;
 import ru.practicum.ViewStats;
 import ru.practicum.mapper.HitMapper;
 import ru.practicum.model.EndpointHit;
@@ -17,15 +17,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class StatsServiceImpl implements StatsService {
     private final StatsRepository statsRepository;
 
     @Transactional
     @Override
-    public EndpointHitDto saveHit(EndpointHitDto endpointHitDto) {
+    public OutputHitDto saveHit(EndpointHitDto endpointHitDto) {
         EndpointHit hit = HitMapper.toEntity(endpointHitDto);
-        EndpointHitDto savedHit = HitMapper.toDto(statsRepository.save(hit));
+        OutputHitDto savedHit = HitMapper.toOutputDto(statsRepository.save(hit));
         log.info("Statistics saved");
         return savedHit;
     }

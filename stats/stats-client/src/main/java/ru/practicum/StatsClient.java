@@ -19,17 +19,17 @@ public class StatsClient {
 
     private final RestTemplate restTemplate;
 
-    public EndpointHitDto saveHit(EndpointHitDto endpointHitDto) {
+    public OutputHitDto saveHit(EndpointHitDto endpointHitDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<EndpointHitDto> requestEntity = new HttpEntity<>(endpointHitDto, headers);
 
-        ResponseEntity<EndpointHitDto> response = restTemplate.exchange(
+        ResponseEntity<OutputHitDto> response = restTemplate.exchange(
                 uri + "/hit",
                 HttpMethod.POST,
                 requestEntity,
-                EndpointHitDto.class
+                OutputHitDto.class
         );
 
         return response.getBody();
