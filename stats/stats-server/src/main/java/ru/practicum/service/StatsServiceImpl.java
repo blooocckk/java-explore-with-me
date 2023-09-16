@@ -32,6 +32,10 @@ public class StatsServiceImpl implements StatsService {
     @Transactional(readOnly = true)
     @Override
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        if (end.isBefore(start)) {
+            throw new IllegalArgumentException("Start cannot be after the end");
+        }
+
         if (uris == null) {
             if (unique) {
                 log.info("Returning statistics for unique visits for all URLs");
