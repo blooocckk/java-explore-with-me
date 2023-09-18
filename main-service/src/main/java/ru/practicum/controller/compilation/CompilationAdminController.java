@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.CompilationOutputDto;
@@ -13,7 +14,7 @@ import ru.practicum.service.compilation.CompilationService;
 import javax.validation.Valid;
 
 @Slf4j
-@RestController
+@Controller
 @RequestMapping("/admin/compilations")
 @RequiredArgsConstructor
 public class CompilationAdminController {
@@ -36,6 +37,6 @@ public class CompilationAdminController {
     public ResponseEntity<CompilationOutputDto> update(@PathVariable Long compilationId,
                                                        @Valid @RequestBody UpdateCompilationRequest updateCompilationRequest) {
         log.info("Received a request to update a compilation with ID {}: {}", compilationId, updateCompilationRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(compilationService.update(compilationId, updateCompilationRequest));
+        return ResponseEntity.ok(compilationService.update(compilationId, updateCompilationRequest));
     }
 }

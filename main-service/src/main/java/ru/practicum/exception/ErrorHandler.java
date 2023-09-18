@@ -3,6 +3,7 @@ package ru.practicum.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -66,12 +67,22 @@ public class ErrorHandler {
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler({ConstraintViolationException.class})
+    @ExceptionHandler({ConstraintViolationException.class, DataIntegrityViolationException.class})
     public ApiError handleConstraintViolationException(ConstraintViolationException e) {
         String stackTrace = ExceptionUtils.getStackTrace(e);
         log.error("Constraint violation error occurred with code {}. Stack trace: {}. ",
                 HttpStatus.CONFLICT.value(),
                 stackTrace);
         return new ApiError(HttpStatus.CONFLICT, "Resource conflict", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Throwable.class)
+    public ApiError handleInternalServerError(Throwable ex) {
+        String stackTrace = ExceptionUtils.getStackTrace(ex);
+        log.error("Internal server error occurred with code {}. Stack trace: {}. ",
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                stackTrace);
+        return new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", ex.getMessage());
     }
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.Constants;
 import ru.practicum.exception.validation.ValidEventDate;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -29,6 +30,7 @@ public class EventDto {
     @Size(min = 20, max = 7000, message = "Description must be between 20 and 7000 characters")
     private String description;
 
+    @Valid
     @NotNull(message = "Location cannot be empty")
     private LocationDto location;
 

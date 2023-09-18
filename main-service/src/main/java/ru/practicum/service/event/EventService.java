@@ -7,6 +7,7 @@ import ru.practicum.dto.event.EventUpdateRequest;
 import ru.practicum.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.dto.request.ParticipationRequestDto;
+import ru.practicum.model.event.SortType;
 import ru.practicum.model.event.State;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public interface EventService {
     EventOutputDto updateByAdmin(EventUpdateRequest eventUpdateRequest, Long eventId);
 
     List<EventShortDto> searchWithFilters(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
-                                          LocalDateTime rangeEnd, Boolean onlyAvailable, String sort, Integer from,
+                                          LocalDateTime rangeEnd, Boolean onlyAvailable, SortType sort, Integer from,
                                           Integer size, HttpServletRequest request);
 
     EventOutputDto get(Long eventId, HttpServletRequest request);

@@ -1,16 +1,13 @@
 package ru.practicum.dto.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.Constants;
-import ru.practicum.dto.category.CategoryOutputDto;
-import ru.practicum.dto.user.UserShortDto;
-import ru.practicum.model.event.State;
-
-import java.time.LocalDateTime;
+import ru.practicum.dto.event.output.EventDateTimeDto;
+import ru.practicum.dto.event.output.EventDetailsDto;
+import ru.practicum.dto.event.output.EventStatsDto;
 
 @Data
 @Builder
@@ -18,25 +15,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class EventOutputDto {
     private Long id;
-    private String annotation;
-    private CategoryOutputDto category;
-    private Integer confirmedRequests;
 
-    @JsonFormat(pattern = Constants.DATE_TIME_PATTERN)
-    private LocalDateTime createdOn;
-    private String description;
+    @JsonUnwrapped
+    private EventDetailsDto eventDetails;
 
-    @JsonFormat(pattern = Constants.DATE_TIME_PATTERN)
-    private LocalDateTime eventDate;
-    private UserShortDto initiator;
-    private LocationDto location;
-    private boolean paid;
-    private Long participantLimit;
+    @JsonUnwrapped
+    private EventDateTimeDto eventDateTime;
 
-    @JsonFormat(pattern = Constants.DATE_TIME_PATTERN)
-    private LocalDateTime publishedOn;
-    private boolean requestModeration;
-    private State state;
-    private String title;
-    private Long views;
+    @JsonUnwrapped
+    private EventStatsDto eventStats;
 }
+

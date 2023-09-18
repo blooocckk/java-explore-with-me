@@ -2,7 +2,6 @@ package ru.practicum.service.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,10 +25,8 @@ import ru.practicum.mapper.location.LocationMapper;
 import ru.practicum.mapper.request.RequestMapper;
 import ru.practicum.model.ModuleInfo;
 import ru.practicum.model.category.Category;
-import ru.practicum.model.event.Event;
-import ru.practicum.model.event.Location;
-import ru.practicum.model.event.State;
-import ru.practicum.model.event.StateAction;
+import ru.practicum.model.event.*;
+import ru.practicum.model.pagination.PageCalculation;
 import ru.practicum.model.request.Request;
 import ru.practicum.model.user.User;
 import ru.practicum.repository.category.CategoryRepository;
@@ -179,7 +176,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional(readOnly = true)
     public List<EventShortDto> getAlLByCreator(Long userId, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from, size);
+        Pageable pageable = new PageCalculation(from, size);
         List<EventShortDto> events = eventRepository.findByInitiator_Id(userId, pageable).stream()
                 .map(EventMapper::toShortDto)
                 .collect(Collectors.toList());
@@ -224,7 +221,7 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
     public List<EventOutputDto> search(List<Long> users, List<State> states, List<Long> categories,
                                        LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from, size);
+        Pageable pageable = new PageCalculation(from, size);
         Specification<Event> searchSpec = EventSpecifications.search(users, categories, states, rangeStart, rangeEnd);
         List<EventOutputDto> events = eventRepository.findAll(searchSpec, pageable).stream()
                 .map(EventMapper::toOutputDto)
@@ -269,7 +266,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public List<EventShortDto> searchWithFilters(String text, List<Long> categories, Boolean paid,
                                                  LocalDateTime rangeStart, LocalDateTime rangeEnd,
-                                                 Boolean onlyAvailable, String sort, Integer from, Integer size,
+                                                 Boolean onlyAvailable, SortType sort, Integer from, Integer size,
                                                  HttpServletRequest request) {
         LocalDateTime start;
 
@@ -279,15 +276,15 @@ public class EventServiceImpl implements EventService {
             throw new IllegalArgumentException("Start cannot be after the end");
         }
 
-        Pageable pageable = PageRequest.of(from, size);
+        Pageable pageable = new PageCalculation(from, size);
 
         if (sort != null) {
             switch (sort) {
-                case "EVENT_DATE":
-                    pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "eventDate"));
+                case EVENT_DATE:
+                    pageable = new PageCalculation(from, size, Sort.by(Sort.Direction.DESC, "eventDate"));
                     break;
-                case "VIEWS":
-                    pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "views"));
+                case VIEWS:
+                    pageable = new PageCalculation(from, size, Sort.by(Sort.Direction.DESC, "views"));
                     break;
             }
         }
@@ -357,10 +354,12 @@ public class EventServiceImpl implements EventService {
             throw new ObjectAlreadyExistsException("The participation limit has been exceeded");
         }
 
+        List<Request> requestsToSave = new ArrayList<>();
         if (eventRequestStatusUpdateRequest.getStatus().equals(State.REJECTED)) {
             for (Request request : requests) {
                 request.setStatus(State.REJECTED);
-                rejected.add(requestRepository.save(request));
+                requestsToSave.add(request);
+                rejected.add(request);
             }
         }
 
@@ -368,17 +367,20 @@ public class EventServiceImpl implements EventService {
             for (Request request : requests) {
                 if (limitBalance > 0) {
                     request.setStatus(State.CONFIRMED);
-                    confirmed.add(requestRepository.save(request));
+                    requestsToSave.add(request);
+                    confirmed.add(request);
                     event.setConfirmedRequests(event.getConfirmedRequests() + 1);
                     limitBalance--;
                 } else {
                     request.setStatus(State.REJECTED);
-                    rejected.add(requestRepository.save(request));
+                    requestsToSave.add(request);
+                    confirmed.add(request);
                 }
             }
         }
 
         eventRepository.save(event);
+        requestRepository.saveAll(requestsToSave);
 
         List<ParticipationRequestDto> rejectedParticipationRequestDto = rejected.stream()
                 .map(RequestMapper::toParticipationRequestDto)

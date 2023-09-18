@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.Constants;
 import ru.practicum.dto.event.EventOutputDto;
@@ -18,9 +20,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
-@RestController
+@Controller
 @RequestMapping("/admin/events")
 @RequiredArgsConstructor
+@Validated
 public class EventAdminController {
     private final EventService eventService;
 

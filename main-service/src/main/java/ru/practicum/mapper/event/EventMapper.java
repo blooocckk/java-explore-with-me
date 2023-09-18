@@ -4,6 +4,9 @@ import lombok.experimental.UtilityClass;
 import ru.practicum.dto.event.EventDto;
 import ru.practicum.dto.event.EventOutputDto;
 import ru.practicum.dto.event.EventShortDto;
+import ru.practicum.dto.event.output.EventDateTimeDto;
+import ru.practicum.dto.event.output.EventDetailsDto;
+import ru.practicum.dto.event.output.EventStatsDto;
 import ru.practicum.mapper.category.CategoryMapper;
 import ru.practicum.mapper.location.LocationMapper;
 import ru.practicum.mapper.user.UserMapper;
@@ -25,25 +28,38 @@ public class EventMapper {
     }
 
     public EventOutputDto toOutputDto(Event event) {
-        return EventOutputDto.builder()
-                .id(event.getId())
-                .annotation(event.getAnnotation())
-                .confirmedRequests(event.getConfirmedRequests())
-                .category(CategoryMapper.toOutputDto(event.getCategory()))
-                .createdOn(event.getCreatedOn())
-                .location(LocationMapper.toDto(event.getLocation()))
-                .initiator(UserMapper.toShortDto(event.getInitiator()))
+        EventDetailsDto eventDetailsDto = EventDetailsDto.builder()
                 .description(event.getDescription())
-                .eventDate(event.getEventDate())
+                .annotation(event.getAnnotation())
+                .category(CategoryMapper.toOutputDto(event.getCategory()))
                 .paid(event.isPaid())
                 .participantLimit(event.getParticipantLimit())
-                .publishedOn(event.getPublishedOn())
                 .requestModeration(event.isRequestModeration())
+                .initiator(UserMapper.toShortDto(event.getInitiator()))
+                .location(LocationMapper.toDto(event.getLocation()))
                 .state(event.getState())
-                .views(event.getViews())
                 .title(event.getTitle())
+                .publishedOn(event.getPublishedOn())
+                .build();
+
+        EventDateTimeDto eventDateTimeDto = EventDateTimeDto.builder()
+                .createdOn(event.getCreatedOn())
+                .eventDate(event.getEventDate())
+                .build();
+
+        EventStatsDto eventStatsDto = EventStatsDto.builder()
+                .confirmedRequests(event.getConfirmedRequests())
+                .views(event.getViews())
+                .build();
+
+        return EventOutputDto.builder()
+                .id(event.getId())
+                .eventDetails(eventDetailsDto)
+                .eventDateTime(eventDateTimeDto)
+                .eventStats(eventStatsDto)
                 .build();
     }
+
 
     public EventShortDto toShortDto(Event event) {
         return EventShortDto.builder()

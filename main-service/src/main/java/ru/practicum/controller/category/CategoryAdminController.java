@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.CategoryOutputDto;
@@ -12,7 +13,7 @@ import ru.practicum.service.category.CategoryService;
 import javax.validation.Valid;
 
 @Slf4j
-@RestController
+@Controller
 @RequestMapping("/admin/categories")
 @RequiredArgsConstructor
 public class CategoryAdminController {
@@ -28,7 +29,7 @@ public class CategoryAdminController {
     public ResponseEntity<CategoryOutputDto> update(@PathVariable Long categoryId,
                                                     @RequestBody @Valid CategoryDto categoryDto) {
         log.info("Received a request to update a category by ID: {}", categoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.update(categoryDto, categoryId));
+        return ResponseEntity.ok(categoryService.update(categoryDto, categoryId));
     }
 
     @DeleteMapping("/{categoryId}")

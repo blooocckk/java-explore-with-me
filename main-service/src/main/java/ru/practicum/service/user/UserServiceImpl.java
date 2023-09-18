@@ -2,13 +2,13 @@ package ru.practicum.service.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.user.UserDto;
 import ru.practicum.dto.user.UserOutputDto;
 import ru.practicum.mapper.user.UserMapper;
+import ru.practicum.model.pagination.PageCalculation;
 import ru.practicum.model.user.User;
 import ru.practicum.repository.user.UserRepository;
 
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserOutputDto> get(List<Long> ids, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from, size);
+        Pageable pageable = new PageCalculation(from, size);
         List<UserOutputDto> userOutputDtoList = userRepository.getUsersByIds(ids, pageable);
         log.info("Returning a list of {} users", userOutputDtoList.size());
         return userOutputDtoList;

@@ -2,7 +2,6 @@ package ru.practicum.service.compilation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +14,7 @@ import ru.practicum.mapper.compilation.CompilationMapper;
 import ru.practicum.mapper.event.EventMapper;
 import ru.practicum.model.compilation.Compilation;
 import ru.practicum.model.event.Event;
+import ru.practicum.model.pagination.PageCalculation;
 import ru.practicum.repository.compilation.CompilationRepository;
 import ru.practicum.repository.event.EventRepository;
 
@@ -76,7 +76,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional(readOnly = true)
     public List<CompilationOutputDto> getAll(Boolean pinned, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from, size);
+        Pageable pageable = new PageCalculation(from, size);
         List<CompilationOutputDto> events = new ArrayList<>();
         compilationRepository.findAllByPinned(pinned, pageable).forEach(compilation -> {
             CompilationOutputDto outputDto = CompilationMapper.toOutputDto(compilation);
