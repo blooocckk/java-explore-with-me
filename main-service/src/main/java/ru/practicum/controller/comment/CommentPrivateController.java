@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.comment.CommentOutputDto;
@@ -17,7 +16,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/users/{userId}/comments")
 @RequiredArgsConstructor
-@Validated
 public class CommentPrivateController {
     private final CommentService commentService;
 

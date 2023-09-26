@@ -1,6 +1,7 @@
 package ru.practicum.model.comment;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.model.event.Event;
 import ru.practicum.model.user.User;
 
@@ -31,11 +32,7 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @CreationTimestamp
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
-
-    @PrePersist
-    private void prePersist() {
-        this.createdOn = LocalDateTime.now();
-    }
 }
