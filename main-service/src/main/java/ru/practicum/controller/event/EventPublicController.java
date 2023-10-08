@@ -46,7 +46,7 @@ public class EventPublicController {
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventOutputDto> getPublicFullEvent(@PathVariable Long eventId,
+    public ResponseEntity<EventOutputDto> getById(@PathVariable Long eventId,
                                                              HttpServletRequest request) {
         log.info("Received a request to get full public event with ID: {}", eventId);
         return ResponseEntity.ok(eventService.get(eventId, request));
